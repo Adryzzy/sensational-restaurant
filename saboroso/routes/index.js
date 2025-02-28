@@ -9,7 +9,8 @@ router.get('/', function(req, res, next) {
   menus.getMenus().then(results => {
     res.render('index', { 
       title: 'Sensational Reustaurant!', 
-      menus: results
+      menus: results,
+      isHome: true
     });
   });
 
@@ -22,6 +23,7 @@ router.get('/contacts', function(req, res, next) {
     title: 'Contact Us',
     background: 'images/img_bg_3.jpg',
     h1: 'diga oi'
+    
   });
 });
 
