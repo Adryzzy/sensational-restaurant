@@ -25,4 +25,20 @@ router.get('/', function(req, res, next) {
 
 });
 
+router.get('/contacts', function(req, res, next) {
+  res.render('contacts', {title: 'Contact Us'});
+});
+
+router.get('/menus', function(req, res, next) {
+  res.render('menus', {title: 'Our Menus'});
+});
+
+router.get('/reservations', function(req, res, next) {
+  res.render('reservations', {title: 'Make a Reservation'});
+});
+
+router.get('/services', function(req, res, next) {
+  res.render('services', {title: 'Our Services'});
+});
+
 module.exports = router;
