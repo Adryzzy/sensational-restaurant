@@ -1,33 +1,62 @@
 var express = require('express');
-const { route } = require('.');
+var users = require('./../inc/users');
 var router = express.Router();  
 
 router.get('/', function(req, res, next) {
   res.render('admin/index')
 });
+
+
 router.get('/login', function(req, res, next) {
-
-    if(!req.session.views) req.session.views = 0;
-
-    console.log("SESSION: ",req.session.views++);
-       
-
-  res.render('admin/login')
+  users.render(req, res, null)
 });
+
+
+router.post('/login', function(req, res, next) {
+  
+ if(!req.body.email){
+
+  users.render(req,res, "Preencha o campo e-mail");
+
+ }else if(!req.body.password){
+  users.render(req,res, "Preencha o campo senha");
+ } else{
+
+  users.login(req.body.email, req.body.password).then(user =>{
+
+    req.session.user = user;
+
+    res.redirect("/admin");
+
+  }).catch(err =>{
+
+    users.render(req, res, err.message || err);
+
+  });
+
+ }
+
+});
+
 router.get('/contacts', function(req, res, next) {
   res.render('admin/contacts')
 });
+
 router.get('/emails', function(req, res, next) {
   res.render('admin/emails')
 });
+
 router.get('/menus', function(req, res, next) {
   res.render('admin/menus')
 });
+
 router.get('/reservations', function(req, res, next) {
   res.render('admin/reservations',{
     date:{}
   });
+
 });
+
 router.get('/users', function(req, res, next) {
   res.render('admin/users')
 });
