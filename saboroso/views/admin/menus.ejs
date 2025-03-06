@@ -151,15 +151,15 @@
 
         e.preventDefault();
 
-        let formCreateData =new FormData(formCreate);
+        let formCreateData = new FormData(formCreate);
 
         fetch("/admin/menus",{
-          method: 'POST',
+          method:'POST',
           body: formCreateData
         })
         .then(response => response.json())
         .then(json => {
-          console.log("JSON", json);
+          window.location.reload();
         });
       });
 
