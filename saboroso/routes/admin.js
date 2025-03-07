@@ -92,7 +92,7 @@ router.get('/menus', function(req, res, next) {
 
   menus.getMenus().then(data => {
 
-    res.render('admin/menus',admin.getParams(req, {
+    res.render("admin/menus", admin.getParams(req, {
       data
     }));
 
