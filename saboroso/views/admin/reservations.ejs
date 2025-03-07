@@ -199,3 +199,34 @@
 
 
 <%- include("inc/footer")-%>
+
+<script src="\js\ad-filereader.js"></script>
+<script src="\js\ad-formsave.js"></script>
+<script>
+
+let formCreate = document.querySelector("#modal-create form");
+
+      formCreate.save().then(json=>{
+
+        window.location.reload();
+
+      }).catch(err=>{
+
+        
+
+      });
+
+      let formUpdate = document.querySelector("#modal-update form");
+
+      formUpdate.save().then(json=>{
+
+          window.location.reload();
+
+            }).catch(err=>{
+
+
+
+            });
+
+
+</script>
