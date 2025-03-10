@@ -1,12 +1,24 @@
 class AdGrid {
     constructor(configs) {
         
+
+        configs.listeners = Object.assign({
+
+            afterUpdateClick: (e)=>{
+          
+                $('#modal-update').modal('show');
+          
+              }
+
+        }, configs.listeners);
+
         this.options = Object.assign({},{
 
             formCreate: '#modal-create form',
             formUpdate: '#modal-update form',
             btnUpdate: '.btn-update',
             btnDelete: '.btn-delete',
+           
 
         },configs) ;
 
@@ -45,6 +57,13 @@ class AdGrid {
 
     }
 
+    fireEvent(name, args){
+
+        if(typeof this.options.listeners[name] === 'function') this.options.listeners[name].apply(this, args);
+
+    }
+
+
     initButtons(){
 
         
@@ -52,7 +71,7 @@ class AdGrid {
 
         btn.addEventListener('click', e =>{
 
-
+            this.fireEvent('beforeUpdateClick', [e]);
 
         let tr = e.target.closest("tr"); // Alteração aqui
 
@@ -103,7 +122,8 @@ class AdGrid {
         }
         }
 
-        $('#modal-update').modal('show');
+        
+        this.fireEvent('afterUpdateClick', [e]);
 
         });
 
