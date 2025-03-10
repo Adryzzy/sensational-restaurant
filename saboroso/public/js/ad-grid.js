@@ -8,7 +8,33 @@ class AdGrid {
           
                 $('#modal-update').modal('show');
           
-              }
+              },
+
+            afterDeleteClick: (e) =>{
+
+                window.location.reload();
+
+            },
+            afterFormCreate:(e) =>{
+
+                window.location.reload();
+
+            },
+            afterFormUpdate:(e) =>{
+
+                window.location.reload();
+
+            },
+            afterFormCreateError: e =>{
+                
+                alert('Não foi possivel enviar o formulário');
+                
+            },
+            afterFormUpdateError: e =>{
+
+                alert('Não foi possivel atualizar o formulário');
+
+            }
 
         }, configs.listeners);
 
@@ -34,11 +60,11 @@ class AdGrid {
 
         this.formCreate.save().then(json=>{
 
-        window.location.reload();
+            this.fireEvent('afterFormCreate');
 
         }).catch(err=>{
 
-        
+         this.fireEvent('afterFormCreateError');
 
         });
 
@@ -46,10 +72,11 @@ class AdGrid {
 
         this.formUpdate.save().then(json=>{
 
-            window.location.reload();
+            this.fireEvent('afterFormUpdate');
 
             }).catch(err=>{
 
+                this.fireEvent('afterFormUpdateError');
 
 
         });
@@ -63,6 +90,16 @@ class AdGrid {
 
     }
 
+    getTrData(e){
+
+        let tr = e.target.closest("tr"); // Alteração aqui
+
+        if (!tr) return; // Verificação para evitar erro
+
+        return JSON.parse(tr.dataset.row);
+
+
+    }
 
     initButtons(){
 
@@ -71,13 +108,9 @@ class AdGrid {
 
         btn.addEventListener('click', e =>{
 
-            this.fireEvent('beforeUpdateClick', [e]);
+            this.fireEvent('beforeDeleteClick');
 
-        let tr = e.target.closest("tr"); // Alteração aqui
-
-        if (!tr) return; // Verificação para evitar erro
-
-        let data = JSON.parse(tr.dataset.row);
+        let data = this.getTrData(e);
 
         if(confirm(eval('`' + this.options.deleteMsg + '`'))){
 
@@ -88,7 +121,7 @@ class AdGrid {
         .then(response => response.json())
         .then(json=>{
 
-            window.location.reload();
+            this.fireEvent('afterDeleteClick');
 
         });
 
@@ -101,11 +134,9 @@ class AdGrid {
 
     btn.addEventListener('click', e => {
 
-        let tr = e.target.closest("tr"); // Alteração aqui
+        this.fireEvent('beforeUpdateClick', [e]);
 
-        if (!tr) return; // Verificação para evitar erro
-
-        let data = JSON.parse(tr.dataset.row);
+        let data = this.getTrData(e);
 
         for (let name in data) {
 
