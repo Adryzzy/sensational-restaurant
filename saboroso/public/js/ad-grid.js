@@ -42,14 +42,16 @@ class AdGrid {
 
             formCreate: '#modal-create form',
             formUpdate: '#modal-update form',
-            btnUpdate: '.btn-update',
-            btnDelete: '.btn-delete',
+            btnUpdate: 'btn-update',
+            btnDelete: 'btn-delete',
             onUpdateLoad:(form,name,data) =>{
               let input = form.querySelector('[name='+name+']');
               if(input)  input.value = data[name];
             }
 
         },configs) ;
+
+        this.rows = [...document.querySelectorAll('table tbody tr')];
 
         this.initForm();
         this.initButtons();
@@ -61,26 +63,27 @@ class AdGrid {
 
         this.formCreate = document.querySelector(this.options.formCreate);
 
-        this.formCreate.save().then(json=>{
-
+        this.formCreate.save({
+            success: ()=>{
             this.fireEvent('afterFormCreate');
 
-        }).catch(err=>{
+        },failure: () =>{
 
          this.fireEvent('afterFormCreateError');
 
-        });
+        }
+    });
 
         this.formUpdate = document.querySelector(this.options.formUpdate);
 
-        this.formUpdate.save().then(json=>{
-
+        this.formUpdate.save({
+            success: ()=>{
             this.fireEvent('afterFormUpdate');
 
-            }).catch(err=>{
+        },failure: () =>{
 
                 this.fireEvent('afterFormUpdateError');
-
+            }
 
         });
 
@@ -104,14 +107,27 @@ class AdGrid {
 
     }
 
-    initButtons(){
+    btnUpdateClick(e){
+
+        this.fireEvent('beforeUpdateClick', [e]);
+
+        let data = this.getTrData(e);
+
+        for (let name in data) {
+
+        this.options.onUpdateLoad(this.formUpdate, name, data);
 
         
-    [...document.querySelectorAll(this.options.btnDelete)].forEach(btn=>{
+        }
 
-        btn.addEventListener('click', e =>{
+        
+        this.fireEvent('afterUpdateClick', [e]);        
 
-            this.fireEvent('beforeDeleteClick');
+    }
+
+    btnDeleteClick(e){
+
+        this.fireEvent('beforeDeleteClick');
 
         let data = this.getTrData(e);
 
@@ -127,33 +143,39 @@ class AdGrid {
             this.fireEvent('afterDeleteClick');
 
         });
+    }
 
-        }
+    }
+
+    initButtons(){
+
+    this.rows.forEach(row => {
+
+        [...row.querySelectorAll('.btn')].forEach(btn =>{
+
+            btn.addEventListener('click', e =>{
+
+                if(e.target.classList.contains(this.options.btnUpdate)){
+
+                    this.btnUpdateClick(e);
+
+                } else if (e.target.classList.contains(this.options.btnDelete)){
+
+                    this.btnDeleteClick(e);
+
+                }else{
+
+                    this.fireEvent('buttonClick', [e.target, this.getTrData(e), e])
+
+                }
+
+            });
+
         });
 
-        });
-
-    [...document.querySelectorAll(this.options.btnUpdate)].forEach(btn=>{
-
-    btn.addEventListener('click', e => {
-
-        this.fireEvent('beforeUpdateClick', [e]);
-
-        let data = this.getTrData(e);
-
-        for (let name in data) {
-
-        this.options.onUpdateLoad(this.formUpdate, name, data);
-
-        
-        }
-
-        
-        this.fireEvent('afterUpdateClick', [e]);
-
-        });
 
     });
+    
 
     }
 }
