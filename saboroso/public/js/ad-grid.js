@@ -63,6 +63,8 @@ class AdGrid {
 
         this.formCreate = document.querySelector(this.options.formCreate);
 
+        if(this.formCreate){
+
         this.formCreate.save({
             success: ()=>{
             this.fireEvent('afterFormCreate');
@@ -73,9 +75,11 @@ class AdGrid {
 
         }
     });
+}
 
         this.formUpdate = document.querySelector(this.options.formUpdate);
 
+        if(this.formUpdate){
         this.formUpdate.save({
             success: ()=>{
             this.fireEvent('afterFormUpdate');
@@ -86,7 +90,7 @@ class AdGrid {
             }
 
         });
-
+    }
 
     }
 
