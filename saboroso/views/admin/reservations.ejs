@@ -231,18 +231,8 @@ new AdGrid({
   });
 
   let grafico = new Chart(document.querySelector("#chart").getContext("2d"),{
-    type: 'doughnut',
-    data:{
-      labels:['Jan','Fev','Mar','Abr','Mai','Jun'],
-      datasets:[{
-        data:[3,5,6,2,5,2],
-        label: 'Reservar',
-        backgroundColor: 'rgb(54,162,235)',
-       // borderColor: 'gray',
-        fill: true,
-        pointBackgroundColor: '#FFF'
-      }]
-    },
+    type: 'line',
+    data:{},
     options:{
       tooltips:{
         mode:'index',
@@ -265,6 +255,26 @@ new AdGrid({
         }]
       }
     }
+  });
+
+  fetch(`/admin/reservations/chart${window.location.search}`)
+  .then(response => response.json())
+  .then(json =>{
+
+    grafico.data ={
+      labels: json.months,
+      datasets: [{            
+        data:json.values,
+        label: 'Reservas',
+        backgroundColor: 'rgb(54,162,235)',
+        borderColor: 'gray',
+        fill: true,
+        pointBackgroundColor: '#FFF'      
+      }]
+    };
+
+    grafico.update();
+
   });
 
 </script>
